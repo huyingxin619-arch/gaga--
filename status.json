@@ -1,10 +1,46 @@
 {
-  "updatedAt": "2026-09-14T08:32:03.948Z",
+  "updatedAt": "2026-09-14T08:42:14.752Z",
   "ok": false,
   "notes": [
-    "9/30: HTTP 0 fetch failed",
-    "9/29: HTTP 0 fetch failed"
+    "9/30: HTTP 0 fetch failed [ETIMEDOUT] (74708ms)",
+    "9/29: HTTP 0 fetch failed [ETIMEDOUT] (73726ms)"
   ],
   "availableSlots": {},
-  "newAlerts": []
+  "newAlerts": [],
+  "diag": {
+    "egress": {
+      "url": "https://api.ipify.org",
+      "status": 200,
+      "error": null,
+      "ms": 123,
+      "snippet": "57.154.3.199"
+    },
+    "control": {
+      "url": "https://example.com",
+      "status": 200,
+      "error": null,
+      "ms": 46,
+      "snippet": "<!doctype html><html lang=\"en\"><head><title>Example Domain</title><link rel=\"icon\" href=\"data:,\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><style>body{bac"
+    },
+    "failures": [
+      {
+        "page": "9/30",
+        "url": "https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975271/",
+        "status": 0,
+        "error": "fetch failed [ETIMEDOUT]",
+        "ms": 74708,
+        "blocked": false,
+        "snippet": ""
+      },
+      {
+        "page": "9/29",
+        "url": "https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975270/",
+        "status": 0,
+        "error": "fetch failed [ETIMEDOUT]",
+        "ms": 73726,
+        "blocked": false,
+        "snippet": ""
+      }
+    ]
+  }
 }
