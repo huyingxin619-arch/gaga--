@@ -1,0 +1,49 @@
+name: probe-tosc
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'probe.mjs'
+      - '.github/workflows/probe.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: probe-tosc
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.47.2 --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Probe tosc.it (curl + fetch + chromium)
+        continue-on-error: true
+        run: node probe.mjs
+
+      - name: Commit probe.json
+        run: |
+          git config user.name "gaga-bot"
+          git config user.email "gaga-bot@users.noreply.github.com"
+          git add probe.json
+          if git diff --cached --quiet; then
+            echo "no probe.json change"
+          else
+            git commit -m "probe: $(date -u +%FT%TZ)"
+            git push
+          fi
