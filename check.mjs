@@ -48,7 +48,8 @@ async function fetchPage(url) {
     const text = await res.text();
     return { status: res.status, text, error: null };
   } catch (e) {
-    return { status: 0, text: '', error: String(e && e.message || e) };
+    const cause = e && e.cause ? (e.cause.code || e.cause.message || String(e.cause)) : '';
+    return { status: 0, text: '', error: `${String(e && e.message || e)}${cause ? ' [' + cause + ']' : ''}` };
   }
 }
 
