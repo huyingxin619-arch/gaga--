@@ -1,0 +1,50 @@
+{
+  "at": "2026-09-14T08:51:40.683Z",
+  "env": {
+    "node": "v20.20.2",
+    "chrome": "/usr/bin/google-chrome",
+    "playwrightInstalled": true
+  },
+  "results": [
+    {
+      "url": "https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975271/",
+      "curl": "curl: (92) HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)\ncode=000 tcp=0.248794 tls=0.270654 ttfb=0.000000 total=0.290459 bytes=0 exit=92",
+      "curlBodySnippet": "",
+      "fetch": {
+        "error": "The operation was aborted due to timeout",
+        "cause": ""
+      },
+      "playwrightModule": "playwright",
+      "playwright": {
+        "mode": "bundled-chromium",
+        "ms": 241,
+        "httpStatus": null,
+        "bytes": 0,
+        "hasSlots": false,
+        "title": "",
+        "snippet": "",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975271/"
+      }
+    },
+    {
+      "url": "https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975270/",
+      "curl": "curl: (92) HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)\ncode=000 tcp=0.021755 tls=0.044426 ttfb=0.000000 total=0.078203 bytes=0 exit=92",
+      "curlBodySnippet": "",
+      "fetch": {
+        "error": "The operation was aborted due to timeout",
+        "cause": ""
+      },
+      "playwrightModule": "playwright",
+      "playwright": {
+        "mode": "bundled-chromium",
+        "ms": 198,
+        "httpStatus": null,
+        "bytes": 0,
+        "hasSlots": false,
+        "title": "",
+        "snippet": "",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975270/"
+      }
+    }
+  ]
+}
