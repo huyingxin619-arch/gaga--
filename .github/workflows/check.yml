@@ -27,22 +27,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Network diagnostics
-        run: |
-          echo "== runner egress ip =="
-          curl -s --max-time 10 https://api.ipify.org || true
-          echo
-          echo "== control: example.com =="
-          curl -s -o /dev/null -w 'code=%{http_code}\n' --max-time 20 https://example.com || true
-          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
-          for U in \
-            "https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975271/" \
-            "https://www.tosc.it/en/event/galleria-borghese-galleria-borghese-21975270/" ; do
-            echo "== $U =="
-            curl -sS -o /tmp/body.html -w 'code=%{http_code} size=%{size_download} time=%{time_total}\n' -A "$UA" --max-time 30 "$U" || echo "curl exit=$?"
-            head -c 240 /tmp/body.html 2>/dev/null; echo
-          done
-
       - name: Fetch & parse tosc.it
         run: node check.mjs
 
