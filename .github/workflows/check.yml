@@ -1,0 +1,59 @@
+name: borghese-ticket-check
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: borghese-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch & parse tosc.it
+        run: node check.mjs
+
+      - name: Commit status if it changed (or hourly heartbeat)
+        run: |
+          set -euo pipefail
+          git config user.name "gaga-bot"
+          git config user.email "gaga-bot@users.noreply.github.com"
+          git add status.json
+          node - <<'EOF'
+          const fs = require('fs'), cp = require('child_process');
+          const cur = JSON.parse(fs.readFileSync('status.json', 'utf8'));
+          let prev = null;
+          try { prev = JSON.parse(cp.execSync('git show HEAD:status.json').toString()); } catch {}
+          const norm = (s) => { const c = JSON.parse(JSON.stringify(s)); delete c.updatedAt; return JSON.stringify(c); };
+          const changed = !prev || norm(prev) !== norm(cur);
+          let hb = false;
+          try { const last = Number(cp.execSync('git log -1 --format=%ct').toString().trim()); hb = (Date.now() / 1000 - last) > 3600; } catch {}
+          fs.writeFileSync('/tmp/decision', changed ? 'changed' : (hb ? 'heartbeat' : 'skip'));
+          EOF
+          DECISION=$(cat /tmp/decision)
+          echo "decision: $DECISION"
+          if [ "$DECISION" = "changed" ]; then
+            git commit -m "status: $(node -e "const s=require('./status.json'); const a=s.newAlerts||[]; console.log(a.length? 'ALERT ' + a.map(x=>x.page+' '+x.slot).join('; ') : 'update')")"
+            git push
+          elif [ "$DECISION" = "heartbeat" ]; then
+            git commit --allow-empty -m "heartbeat $(date -u +%FT%TZ)"
+            git push
+          else
+            git checkout -- status.json || true
+            echo "no change, nothing committed"
+          fi
