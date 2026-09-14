@@ -21,22 +21,28 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        continue-on-error: true
 
       - uses: actions/setup-node@v4
+        continue-on-error: true
         with:
           node-version: '20'
 
-      - name: Install Playwright Chromium
+      - name: Install playwright (best effort)
+        continue-on-error: true
         run: |
-          npm init -y >/dev/null 2>&1
-          npm i playwright@1.47.2 --no-audit --no-fund
-          npx playwright install --with-deps chromium
+          npm init -y >/dev/null 2>&1 || true
+          npm i playwright-core@1.47.2 --no-audit --no-fund || true
+          npm i playwright@1.47.2 --no-audit --no-fund || true
+          npx playwright install --with-deps chromium || true
 
-      - name: Probe tosc.it (curl + fetch + chromium)
+      - name: Probe tosc.it
         continue-on-error: true
         run: node probe.mjs
 
       - name: Commit probe.json
+        if: always()
+        continue-on-error: true
         run: |
           git config user.name "gaga-bot"
           git config user.email "gaga-bot@users.noreply.github.com"
